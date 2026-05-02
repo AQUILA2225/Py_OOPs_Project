@@ -20,6 +20,8 @@ class Register:
             cursorObj.execute(query,data)
             conObj.commit()
             print("user registered successfully")
+        else:
+            print("Invalid credentials")
             
             if True:
                 from login import Login

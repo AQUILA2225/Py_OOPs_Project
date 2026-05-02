@@ -11,13 +11,9 @@ class Login:
                 from dashboard import Dashboard
                 Dashboard(i)
                 break
-            else:
-                print("customer not found with that details")
-                continue
-        
-        
-        print("login class")
-        
+        if i[2]!= an and i[4]!= p:
+            print("customer not found with that details")
+                
 
 acc = input("Enter account number:")
 pwd = input("Enter password: ")

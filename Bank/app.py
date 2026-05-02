@@ -1,7 +1,7 @@
 class Dashboard:
     def __init__(self, loggedInUser):
         print("Welcome to XYZ Bank")
-        print(f"welcome {i[1]} to XYZ Bank")
+        print(f"welcome {loggedInUser} to XYZ Bank")
         
 while True:
     print("1. Register")
@@ -15,3 +15,6 @@ while True:
     elif op == 2:
         from login import Login
     
+
+        
+        
