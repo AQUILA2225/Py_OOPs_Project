@@ -59,10 +59,12 @@ while True:
             
             # cart=[]
             product_id = int(input("Enter product id to add to cart: "))
+            product_name = input("Enter Name of the product: ")
             quantity = int(input("Enter quantity: "))
 
             cart.append({
                 "product_id": product_id,
+                "product_name": product_name,
                 "quantity": quantity
                 })
 
@@ -72,22 +74,32 @@ while True:
     elif choice == 6:
         if current_user_id is None:
             print("Please login first")
+            
         elif len(cart) == 0: # checks if cart has products or not
             print("Cart is empty. Please add products first")
         else:
+            all_orders_placed = True
+            
             for item in cart: 
                 product_id = item["product_id"]
+                product_name = item["product_name"]
                 quantity = item["quantity"]
                 
                 # user_id = int(input("Enter user ID: "))
                 # product_id = int(input("Enter product ID: "))
                 # quantity = int(input("Enter quantity: "))
 
-                o = Orders(current_user_id, product_id, quantity)
-                o.place_order()
+                o = Orders(current_user_id, product_id, product_name, quantity)
+                result = o.place_order()
                 
-            cart.clear()
-            print("Cart cleared after placing order")
+                if result == False:
+                    all_orders_placed = False
+            
+            if all_orders_placed:
+                cart.clear()
+                print("Cart cleared after placing order")
+            else:
+                print("Some orders failed. Cart is not cleared")
         
     elif choice == 7:
         order_id = int(input("Enter order ID to cancel: "))

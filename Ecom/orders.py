@@ -1,39 +1,56 @@
 from dbConnection import dbcon, cursorObj
 
 class Orders:
-    def __init__(self,user_id=None,product_id=None,quantity=None):
+    def __init__(self,user_id=None,product_id=None,product_name=None, quantity=None):
         self.user_id = user_id
         self.product_id = product_id
+        self.product_name = product_name
         self.quantity = quantity
         
     def place_order(self):
-        query = "SELECT price,quantity FROM products WHERE product_id = %s"
-        cursorObj.execute(query, (self.product_id,))
-        result = cursorObj.fetchone()
+        while True:
+            query = "SELECT price,quantity FROM products WHERE product_id = %s"
+            cursorObj.execute(query, (self.product_id,))
+            result = cursorObj.fetchone()
         
-        if result:
-            price = result[0]
-            available_quantity = result[1]
+            if result:
+                price = result[0]
+                available_quantity = result[1]
+                
+                if self.quantity <= 0:
+                    print("Quantity must be greater than Zero")
+                    self.quantity = int(input("Enter Valid quantity: "))
+                    continue
+                
+                elif self.quantity > available_quantity:
+                    print("Not enough stock available")
+                    print("Available quantity:", available_quantity)
+                    self.quantity = int(input("Enter valid quantity: "))
+                    continue
+                break 
             
-            if self.quantity > available_quantity:
-                print("Not enough stock available")
-                print("Available quantity:", available_quantity)
             else:
-                total_amount = price * self.quantity
-            
-                query = """
-                    INSERT INTO orders(user_id, product_id, quantity, total_amount, order_status, payment_status)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                    """
-                data = (self.user_id, self.product_id, self.quantity, total_amount, "Placed", "Paid")
-            
-                cursorObj.execute(query, data)
-                dbcon.commit()
-            
-                print("Order placed successfully")
-                print("Total Amount:", total_amount)
-        else:
-            print("Invalid product ID")
+                print("Invalid product ID")
+                return False
+
+        total_amount = price * self.quantity
+                
+        query = """
+            INSERT INTO orders(user_id, product_id, product_name, quantity, total_amount, order_status, payment_status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """
+        data = (self.user_id, self.product_id, self.product_name, self.quantity, total_amount, "Placed", "Paid")
+    
+        cursorObj.execute(query, data)
+        
+        update_query = "update products set quantity = quantity - %s where product_id =%s"
+        update_data = (self.quantity, self.product_id)
+        cursorObj.execute(update_query, update_data)
+        dbcon.commit()
+                
+        print("Order placed successfully")
+        print("Total Amount:", total_amount)
+        return True
             
     def cancel_order(self, order_id):
         query = "update orders set order_status = %s where order_id = %s"

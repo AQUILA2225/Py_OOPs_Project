@@ -21,16 +21,26 @@ class Product:
         products = cursorObj.fetchall()
         
         if products:
-            print("Available Products")
-            print("----------------------")
+            print("\nAvailable Products")
+            print("-" * 60)
             
+            # for product in products:
+            #     print("Product ID:", product[0])
+            #     print("Product Name:", product[1])
+            #     print("Price:", product[2])
+            #     print("Quantity:", product[3])
+            #     print("----------------------")
+            #     # print(products)
+                
+            # Table Header
+            print(f"{'ID':<5} {'Name':<25} {'Price':<10} {'Qty':<5}")
+            print("-" * 60)
+
+            # Table Rows
             for product in products:
-                print("Product ID:", product[0])
-                print("Product Name:", product[1])
-                print("Price:", product[2])
-                print("Quantity:", product[3])
-                print("----------------------")
-                # print(products)
+                print(f"{product[0]:<5} {product[1]:<25} {product[2]:<10} {product[3]:<5}")
+
+                print("-" * 60)
                 
         else:
             print("No products available")
